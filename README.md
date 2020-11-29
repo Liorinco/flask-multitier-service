@@ -106,3 +106,16 @@ To run all the tests:
 ```bash
 pytest
 ```
+
+## Development tools
+
+### Create a new database migration
+
+Use `alembic`: https://alembic.sqlalchemy.org/en/latest/
+
+Here the procedure:
+    1. Create/update the concerned DAO from `service/infractructure/daos`
+    2. Générate the migration:
+        ```bash
+        alembic revision --autogenerate -m "Migration title"
+        ```
