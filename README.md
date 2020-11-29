@@ -25,6 +25,40 @@ To load the virtual environment:
 pipenv shell
 ```
 
+### Development environment variables
+
+Here the required environment variables for development purposes:
+    - `DATABASE_NAME`: Name of the database to create
+    - `DATABASE_USER`: User login to access the database
+    - `DATABASE_PASSWORD`: User password to access the database
+
+Note:
+    `.env` file, located at repository root, allows to automatically set these environment variables when you enter the environment with `pipenv shell` command.
+
+### Local infrastructure installation
+
+Use `docker-compose`: https://docs.docker.com/compose/
+Components:
+    - PostgreSQL database
+
+To run the infrastructure:
+
+```bash
+docker-compose up --detach
+```
+
+To turn off the infrastructure:
+
+```bash
+docker-compose down
+```
+
+To destroy the infrastructure:
+
+```bash
+docker-compose down --volumes
+```
+
 ## Usage
 
 ### Run the service

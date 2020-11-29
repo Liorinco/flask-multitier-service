@@ -1,0 +1,12 @@
+version: "3.8"
+   
+services:
+  database:
+    image: postgres
+    container_name: 'character-management-db'
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - 5432:5432  # trick to access the database directly by localhost
