@@ -25,6 +25,14 @@ To load the virtual environment:
 pipenv shell
 ```
 
+### Required environment variables
+
+Here the required environment variables to make the service available:
+    - `DATABASE_URI`:
+        URI to access the database.
+        Format: {DATABASE_ENGINE}://{DATABASE_USER}:{DATABASE_PASSWORD}@{DATABASE_HOST}:{DATABASE_PORT}/{DATABASE_NAME}
+        Example: postgresql://db_user:db_password@localhost:5432/db_name
+
 ### Development environment variables
 
 Here the required environment variables for development purposes:
@@ -57,6 +65,28 @@ To destroy the infrastructure:
 
 ```bash
 docker-compose down --volumes
+```
+
+### Make the database up to date
+
+Use `alembic`: https://alembic.sqlalchemy.org/en/latest/
+
+To update the database executing migrations:
+
+```bash
+alembic upgrade head
+```
+
+To see the list of migrations:
+
+```bash
+alembic history
+```
+
+To rollback to a migration:
+
+```bash
+alembic downgrade {REVISION_ID}
 ```
 
 ## Usage

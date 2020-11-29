@@ -4,6 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+alembic = "*"
+psycopg2-binary = "*"
+sqlalchemy = "*"
 
 [dev-packages]
 docker-compose = "*"
