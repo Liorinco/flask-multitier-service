@@ -5,8 +5,11 @@ name = "pypi"
 
 [packages]
 alembic = "*"
+flask="*"
+flask-restplus="*"
 psycopg2-binary = "*"
 sqlalchemy = "*"
+werkzeug = "==0.16.1"  # until this issue https://github.com/noirbizarre/flask-restplus/issues/777
 
 [dev-packages]
 docker-compose = "*"
