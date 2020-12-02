@@ -26,6 +26,19 @@ def test_character_dto_instance():
     } == dto_dict
 
 
+def test_character_dto_asdict():
+    from service.dtos.character_dto import CharacterDTO
+    dto_dict = {
+        "id": uuid.uuid4(),
+        "name": "dummy_name",
+        "age": 33,
+        "weight": 70.,
+        "is_human": True,
+    }
+    dto = CharacterDTO().from_dict(dto_dict)
+    assert dto.asdict() == dto_dict
+
+
 def test_character_dto_as_serialized_dict():
     from service.dtos.character_dto import CharacterDTO
     dto_dict = {

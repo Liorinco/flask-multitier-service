@@ -10,6 +10,13 @@ def test_base_dto_instance():
     assert {"id": dto.id} == dto_dict
 
 
+def test_base_dto_asdict():
+    from service.dtos.base_dto import BaseDTO
+    dto_dict = {"id": uuid.uuid4()}
+    dto = BaseDTO().from_dict(dto_dict)
+    assert dto.asdict() == dto_dict
+
+
 def test_base_dto_as_serialized_dict():
     from service.dtos.base_dto import BaseDTO
     dto_dict = {"id": uuid.uuid4()}

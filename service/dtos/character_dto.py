@@ -68,6 +68,16 @@ class CharacterDTO(BaseDTO):
                 variable_name="is_human", expected_type=bool, given_type=type(is_human)
             )
 
+    def asdict(self: object) -> dict:
+        dto_dict = super().asdict()
+        dto_dict.update({
+            "name": self.__name,
+            "age": self.__age,
+            "weight": self.__weight,
+            "is_human": self.__is_human,
+        })
+        return dto_dict
+
     def as_serialized_dict(self: object) -> dict:
         serialized_dict = super().as_serialized_dict()
         serialized_dict.update({
