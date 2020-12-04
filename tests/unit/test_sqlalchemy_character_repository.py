@@ -1,15 +1,15 @@
 from copy import deepcopy
 
 
-def test_SQLAlchemyCharacterRepository_instanciation():
+def test_SQLAlchemyCharacterRepository_instanciation(sqlalchemy_client):
     from service.infrastructure.sqlalchemy_character_repository import (
         SQLAlchemyCharacterRepository,
     )
-    repository = SQLAlchemyCharacterRepository()
+    repository = SQLAlchemyCharacterRepository(sqlalchemy_client=sqlalchemy_client)
 
     assert isinstance(repository, SQLAlchemyCharacterRepository)
     import sqlalchemy
-    assert isinstance(repository.session, sqlalchemy.orm.session.Session)
+    assert isinstance(repository.db_session, sqlalchemy.orm.session.Session)
 
 
 def test_repository_add_character(character_dto, character_repository):

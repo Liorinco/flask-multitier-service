@@ -7,6 +7,12 @@ import config
 config.configure()
 
 
+@pytest.fixture(scope="session")
+def sqlalchemy_client():
+    from service.infrastructure.sqlalchemy_client import SQLAlchemyClient
+    return SQLAlchemyClient(database_uri=config.DATABASE_URI)
+
+
 @pytest.fixture
 def character_dict():
     return {
@@ -31,11 +37,11 @@ def character_dto():
 
 
 @pytest.fixture
-def character_repository():
+def character_repository(sqlalchemy_client):
     from service.infrastructure.sqlalchemy_character_repository import (
         SQLAlchemyCharacterRepository
     )
-    repository = SQLAlchemyCharacterRepository()
+    repository = SQLAlchemyCharacterRepository(sqlalchemy_client=sqlalchemy_client)
 
     yield repository
 
