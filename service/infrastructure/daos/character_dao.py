@@ -8,7 +8,7 @@ from service.infrastructure.daos.dao_base import DAOBase
 class CharacterDAO(DAOBase):
     __tablename__ = "characters"
 
-    id = Column(UUID, primary_key=True)
+    id = Column(UUID(as_uuid=True), primary_key=True)
     name = Column(String(50))
     age = Column(Integer)
     weight = Column(Float)
