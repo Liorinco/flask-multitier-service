@@ -2,6 +2,11 @@ import logging
 import os
 
 from service.api.flask_application import FlaskApplication
+from service.domain.character_management import CharacterManagement
+from service.infrastructure.sqlalchemy_character_repository import (
+    SQLAlchemyCharacterRepository
+)
+from service.infrastructure.sqlalchemy_client import SQLAlchemyClient
 
 
 SERVICE_HOST = os.environ["SERVICE_HOST"]
@@ -12,4 +17,14 @@ DATABASE_URI = os.environ["DATABASE_URI"]
 
 def configure_application():
     logging.basicConfig(level=logging.DEBUG)
-    return FlaskApplication(host=SERVICE_HOST, port=SERVICE_PORT, debug=SERVICE_DEBUG)
+    database_client = SQLAlchemyClient(database_uri=DATABASE_URI)
+    character_repository = SQLAlchemyCharacterRepository(
+        sqlalchemy_client=database_client
+    )
+    character_management_domain = CharacterManagement(repository=character_repository)
+    return FlaskApplication(
+        host=SERVICE_HOST,
+        port=SERVICE_PORT,
+        character_domain=character_management_domain,
+        debug=SERVICE_DEBUG,
+    )

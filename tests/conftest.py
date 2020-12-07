@@ -36,7 +36,7 @@ def character_dto():
     })
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)  # autouse to clean database after all tests
 def character_repository(sqlalchemy_client):
     from service.infrastructure.sqlalchemy_character_repository import (
         SQLAlchemyCharacterRepository
@@ -77,3 +77,15 @@ def persisted_character_dto_population(character_repository):
         character_repository.add_character(character_dto=character_dto)
         character_dto_population.append(character_dto)
     return character_dto_population
+
+
+@pytest.fixture
+def application():
+    from service.config import configure_application
+    app = configure_application()
+    return app.app
+
+
+@pytest.fixture
+def client(application):
+    return application.test_client()

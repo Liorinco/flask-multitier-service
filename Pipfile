@@ -14,6 +14,8 @@ werkzeug = "==0.16.1"  # until this issue https://github.com/noirbizarre/flask-r
 [dev-packages]
 docker-compose = "*"
 pytest="*"
+pytest-flask = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
