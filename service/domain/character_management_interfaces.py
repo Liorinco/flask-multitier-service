@@ -23,3 +23,7 @@ class CharacterManagementInterface(ABC):
     @abstractmethod
     def find_character_by_id(self: object, character_id: uuid.UUID) -> CharacterDTO:
         pass
+
+    @abstractmethod
+    def update_character(self: object, character_dto: CharacterDTO) -> None:
+        pass

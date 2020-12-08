@@ -40,3 +40,7 @@ class CharacterManagement(CharacterManagementInterface):
     def find_character_by_id(self: object, character_id: uuid.UUID) -> CharacterDTO:
         logging.debug("CharacterManagement.find_character_by_id")
         return self.__repository.find_character_by_id(character_id=character_id)
+
+    def update_character(self: object, character_dto: CharacterDTO) -> None:
+        logging.debug("CharacterManagement.update_character")
+        self.__repository.update_character(character_dto=character_dto)
