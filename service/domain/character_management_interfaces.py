@@ -27,3 +27,7 @@ class CharacterManagementInterface(ABC):
     @abstractmethod
     def update_character(self: object, character_dto: CharacterDTO) -> None:
         pass
+
+    @abstractmethod
+    def remove_character(self: object, character_id: uuid.UUID) -> None:
+        pass

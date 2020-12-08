@@ -44,3 +44,7 @@ class CharacterManagement(CharacterManagementInterface):
     def update_character(self: object, character_dto: CharacterDTO) -> None:
         logging.debug("CharacterManagement.update_character")
         self.__repository.update_character(character_dto=character_dto)
+
+    def remove_character(self: object, character_id: uuid.UUID) -> None:
+        logging.debug("CharacterManagement.remove_character")
+        self.__repository.delete_character_by_id(character_id=character_id)
