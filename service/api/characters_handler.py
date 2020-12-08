@@ -17,3 +17,12 @@ class CharactersHandler(Resource):
         json_data = request.get_json()
         character_id = self.__domain.register_character(**json_data)
         return {"character_id": str(character_id)}
+
+    def get(self: object):
+        logging.debug("CharactersHandler.get")
+        character_dtos = self.__domain.find_characters()
+        return {
+            "characters": [
+                character_dto.as_serialized_dict() for character_dto in character_dtos
+            ]
+        }

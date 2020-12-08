@@ -1,5 +1,6 @@
 import logging
 import uuid
+from typing import List
 
 from service.domain.character_management_interfaces import CharacterManagementInterface
 from service.dtos.character_dto import CharacterDTO
@@ -31,3 +32,7 @@ class CharacterManagement(CharacterManagementInterface):
         })
         self.__repository.add_character(character_dto=character_dto)
         return character_id
+
+    def find_characters(self: object) -> List[CharacterDTO]:
+        logging.debug("CharacterManagement.find_characters")
+        return self.__repository.find_characters()
