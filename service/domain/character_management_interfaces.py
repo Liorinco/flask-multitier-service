@@ -19,3 +19,7 @@ class CharacterManagementInterface(ABC):
     @abstractmethod
     def find_characters(self: object) -> List[CharacterDTO]:
         pass
+
+    @abstractmethod
+    def find_character_by_id(self: object, character_id: uuid.UUID) -> CharacterDTO:
+        pass

@@ -36,3 +36,7 @@ class CharacterManagement(CharacterManagementInterface):
     def find_characters(self: object) -> List[CharacterDTO]:
         logging.debug("CharacterManagement.find_characters")
         return self.__repository.find_characters()
+
+    def find_character_by_id(self: object, character_id: uuid.UUID) -> CharacterDTO:
+        logging.debug("CharacterManagement.find_character_by_id")
+        return self.__repository.find_character_by_id(character_id=character_id)
