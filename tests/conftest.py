@@ -80,6 +80,12 @@ def persisted_character_dto_population(character_repository):
 
 
 @pytest.fixture
+def garment_dict():
+    from service.dtos.color import Color
+    return {"id": uuid.uuid4(), "color": Color.YELLOW}
+
+
+@pytest.fixture
 def application():
     from service.config import configure_application
     app = configure_application()
