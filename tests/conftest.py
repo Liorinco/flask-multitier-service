@@ -6,6 +6,8 @@ import config
 
 config.configure()
 
+from helpers import CharacterEntity, GarmentEntity
+
 
 @pytest.fixture(scope="session")
 def sqlalchemy_client():
@@ -83,6 +85,11 @@ def persisted_character_dto_population(character_repository):
 def garment_dict():
     from service.dtos.color import Color
     return {"id": uuid.uuid4(), "color": Color.YELLOW}
+
+
+@pytest.fixture(params=[CharacterEntity, GarmentEntity])
+def entity(request):
+    return request.param
 
 
 @pytest.fixture

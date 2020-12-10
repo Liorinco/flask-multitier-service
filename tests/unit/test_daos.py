@@ -1,28 +1,28 @@
-def test_character_dao_instanciation(character_dict):
-    from service.infrastructure.daos.character_dao import CharacterDAO
-    character_dao = CharacterDAO(**character_dict)
-    assert isinstance(character_dao, CharacterDAO)
-    for key, value in character_dict.items():
-        assert key in character_dao.__dict__
-        assert getattr(character_dao, key) == value
+def test_dao_instanciation(entity):
+    entity_dict = entity.generate_dict()
+    dao = entity.dao_class(**entity_dict)
+    assert isinstance(dao, entity.dao_class)
+    for key, value in entity_dict.items():
+        assert key in dao.__dict__
+        assert getattr(dao, key) == value
 
 
-def test_character_dao_from_dto(character_dto):
-    from service.infrastructure.daos.character_dao import CharacterDAO
-    character_dao = CharacterDAO.from_dto(character_dto=character_dto)
-    assert isinstance(character_dao, CharacterDAO)
-    for key, value in character_dto.asdict().items():
-        assert key in character_dao.__dict__
-        assert getattr(character_dao, key) == value
+def test_dao_from_dto(entity):
+    dto = entity.generate_dto()
+    dao = entity.dao_class.from_dto(dto)
+    assert isinstance(dao, entity.dao_class)
+    for key, value in dto.asdict().items():
+        assert key in dao.__dict__
+        assert getattr(dao, key) == value
 
 
-def test_character_dao_asdict(character_dict):
-    from service.infrastructure.daos.character_dao import CharacterDAO
-    character_dao = CharacterDAO(**character_dict)
-    assert character_dao.asdict() == character_dict
+def test_dao_asdict(entity):
+    entity_dict = entity.generate_dict()
+    dao = entity.dao_class(**entity_dict)
+    assert dao.asdict() == entity_dict
 
 
-def test_character_dao_to_dto(character_dto):
-    from service.infrastructure.daos.character_dao import CharacterDAO
-    character_dao = CharacterDAO.from_dto(character_dto=character_dto)
-    assert character_dao.to_dto() == character_dto
+def test_dao_to_dto(entity):
+    dto = entity.generate_dto()
+    dao = entity.dao_class.from_dto(dto)
+    assert dao.to_dto() == dto
