@@ -6,7 +6,7 @@ import config
 
 config.configure()
 
-from helpers import CharacterEntity, GarmentEntity
+from helpers import CharacterFactory, GarmentFactory
 
 
 @pytest.fixture(scope="session")
@@ -87,9 +87,20 @@ def garment_dict():
     return {"id": uuid.uuid4(), "color": Color.YELLOW}
 
 
-@pytest.fixture(params=[CharacterEntity, GarmentEntity])
-def entity(request):
+@pytest.fixture(params=[CharacterFactory, GarmentFactory])
+def entity_factory(request):
     return request.param
+
+
+@pytest.fixture(autouse=True)  # autouse to clean database after all tests
+def reset_persisted_entities(sqlalchemy_client, entity_factory):
+    yield
+    entity_factory.reset_persisted_entities(sqlalchemy_client=sqlalchemy_client)
+
+
+@pytest.fixture
+def persisted_entity(sqlalchemy_client, entity_factory):
+    return entity_factory.generate_persisted_dto(sqlalchemy_client=sqlalchemy_client)
 
 
 @pytest.fixture
