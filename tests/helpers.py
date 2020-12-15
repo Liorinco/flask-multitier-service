@@ -4,7 +4,7 @@ from abc import ABC, abstractclassmethod
 from service.dtos.base_dto import BaseDTO
 from service.dtos.character_dto import CharacterDTO
 from service.dtos.color import Color
-from service.dtos.garment_dto import GarmentDTO
+from service.dtos.garment_dto import GarmentDTO, GarmentArticle
 from service.infrastructure.daos.character_dao import CharacterDAO
 from service.infrastructure.daos.garment_dao import GarmentDAO
 from service.infrastructure.sqlalchemy_character_repository import (
@@ -144,12 +144,13 @@ class GarmentFactory(EntityFactory):
 
     @classmethod
     def generate_dict(cls):
-        return {"id": uuid.uuid4(), "color": Color.YELLOW}
+        return {"id": uuid.uuid4(), "article": GarmentArticle.HAT, "color": Color.YELLOW}
 
     @classmethod
     def generate_entity_update(cls, entity_dto: GarmentDTO) -> GarmentDTO:
         updated_dto = GarmentDTO()
         updated_dto.id = entity_dto.id
+        updated_dto.article = entity_dto.article
         colors = [color for color in Color if color != entity_dto.color]
         updated_dto.color = colors[0]
         return updated_dto

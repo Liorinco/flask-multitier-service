@@ -84,7 +84,8 @@ def persisted_character_dto_population(character_repository):
 @pytest.fixture
 def garment_dict():
     from service.dtos.color import Color
-    return {"id": uuid.uuid4(), "color": Color.YELLOW}
+    from service.dtos.garment_dto import GarmentArticle
+    return {"id": uuid.uuid4(), "article": GarmentArticle.HAT, "color": Color.YELLOW}
 
 
 @pytest.fixture(params=[CharacterFactory, GarmentFactory])
