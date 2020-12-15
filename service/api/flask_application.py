@@ -6,7 +6,10 @@ from flask_restplus import Api, Namespace
 from service.api.application_interface import ApplicationInterface
 from service.api.character_handler import CharacterHandler
 from service.api.characters_handler import CharactersHandler
-from service.domain.character_management_interfaces import CharacterManagementInterface
+from service.api.garment_handler import GarmentHandler
+from service.api.clothes_handler import ClothesHandler
+from service.domain.character_management_interface import CharacterManagementInterface
+from service.domain.garment_management_interface import GarmentManagementInterface
 
 
 class FlaskApplication(ApplicationInterface):
@@ -15,6 +18,7 @@ class FlaskApplication(ApplicationInterface):
         host: str,
         port: int,
         character_domain: CharacterManagementInterface,
+        garment_domain: GarmentManagementInterface,
         debug: bool = False,
     ) -> object:
         logging.debug("FlaskApplication.__init__")
@@ -24,7 +28,7 @@ class FlaskApplication(ApplicationInterface):
         self.port = port
         self.debug = debug
 
-        # Characters namespace
+        # Character namespace
         character_namespace = Namespace("character")
         character_namespace.add_resource(
             CharacterHandler, "", resource_class_kwargs={"domain": character_domain}
@@ -38,6 +42,20 @@ class FlaskApplication(ApplicationInterface):
             CharactersHandler, "", resource_class_kwargs={"domain": character_domain}
         )
         self.api.add_namespace(characters_namespace, path="/characters")
+        # Garment namespace
+        garment_namespace = Namespace("garment")
+        garment_namespace.add_resource(
+            GarmentHandler, "", resource_class_kwargs={"domain": garment_domain}
+        )
+        self.api.add_namespace(
+            garment_namespace, path="/clothes/<uuid:garment_id>"
+        )
+        # Clothes namespace
+        clothes_namespace = Namespace("clothes")
+        clothes_namespace.add_resource(
+            ClothesHandler, "", resource_class_kwargs={"domain": garment_domain}
+        )
+        self.api.add_namespace(clothes_namespace, path="/clothes")
 
     def run(self) -> None:
         logging.debug("FlaskApplication.run")

@@ -2,7 +2,7 @@ import logging
 import uuid
 from typing import List
 
-from service.domain.character_management_interfaces import CharacterManagementInterface
+from service.domain.character_management_interface import CharacterManagementInterface
 from service.dtos.character_dto import CharacterDTO
 from service.infrastructure.character_repository_interface import (
     CharacterRepositoryInterface

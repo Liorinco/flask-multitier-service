@@ -4,7 +4,7 @@ import uuid
 from flask import request
 from flask_restplus import Resource
 
-from service.domain.character_management_interfaces import CharacterManagementInterface
+from service.domain.character_management_interface import CharacterManagementInterface
 from service.dtos.character_dto import CharacterDTO
 
 

@@ -88,6 +88,46 @@ def garment_dict():
     return {"id": uuid.uuid4(), "article": GarmentArticle.HAT, "color": Color.YELLOW}
 
 
+@pytest.fixture
+def garment_dto(garment_dict):
+    from service.dtos.garment_dto import GarmentDTO
+    return GarmentDTO().from_dict(garment_dict)
+
+
+@pytest.fixture(autouse=True)  # autouse to clean database after all tests
+def garment_repository(sqlalchemy_client):
+    from service.infrastructure.sqlalchemy_garment_repository import (
+        SQLAlchemyGarmentRepository
+    )
+    repository = SQLAlchemyGarmentRepository(sqlalchemy_client=sqlalchemy_client)
+
+    yield repository
+
+    repository.reset()
+
+
+@pytest.fixture
+def persisted_garment_dto(garment_repository, garment_dto):
+    garment_repository.add_garment(garment_dto=garment_dto)
+    return garment_dto
+
+
+@pytest.fixture
+def persisted_garment_dto_population(garment_repository):
+    from service.dtos.color import Color
+    from service.dtos.garment_dto import GarmentDTO, GarmentArticle
+    garment_dto_population = []
+    for x in range(1, 6):
+        garment_dto = GarmentDTO().from_dict({
+            "id": uuid.uuid4(),
+            "article": [article for article in GarmentArticle][x % len(GarmentArticle)],
+            "color": [color for color in Color][x % len(Color)],
+        })
+        garment_repository.add_garment(garment_dto=garment_dto)
+        garment_dto_population.append(garment_dto)
+    return garment_dto_population
+
+
 @pytest.fixture(params=[CharacterFactory, GarmentFactory])
 def entity_factory(request):
     return request.param
