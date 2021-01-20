@@ -1,6 +1,6 @@
 import logging
 import uuid
-from typing import List
+from typing import List, Optional
 
 from service.domain.character_management_interface import CharacterManagementInterface
 from service.dtos.character_dto import CharacterDTO
@@ -20,6 +20,7 @@ class CharacterManagement(CharacterManagementInterface):
         character_age: int,
         character_weight: float,
         character_is_human: bool,
+        character_hat_id: Optional[uuid.UUID],
     ) -> uuid.UUID:
         logging.debug("CharacterManagement.register_character")
         character_id = uuid.uuid4()
@@ -29,6 +30,7 @@ class CharacterManagement(CharacterManagementInterface):
             "age": character_age,
             "weight": character_weight,
             "is_human": character_is_human,
+            "hat_id": character_hat_id,
         })
         self.__repository.add_character(character_dto=character_dto)
         return character_id

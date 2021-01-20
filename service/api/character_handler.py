@@ -23,6 +23,11 @@ class CharacterHandler(Resource):
         logging.debug(f"CharacterHandler.put(character_id={character_id})")
         character_data = {"id": character_id}
         character_data.update(request.get_json())
+        character_data["hat_id"] = (
+            None
+            if character_data["hat_id"] is None
+            else uuid.UUID(character_data["hat_id"])
+        )
         character_dto = CharacterDTO().from_dict(character_data)
         self.__domain.update_character(character_dto=character_dto)
 

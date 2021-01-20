@@ -118,6 +118,7 @@ class CharacterFactory(EntityFactory):
             "age": 30,
             "weight": 70.3,
             "is_human": True,
+            "hat_id": None,
         }
 
     @classmethod
@@ -128,6 +129,7 @@ class CharacterFactory(EntityFactory):
         updated_dto.age = entity_dto.age + 3
         updated_dto.weight = entity_dto.weight + 8.6
         updated_dto.is_human = not entity_dto.is_human
+        updated_dto.hat_id = None
         return updated_dto
 
 

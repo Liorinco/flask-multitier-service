@@ -23,6 +23,7 @@ def character_dict():
         "age": 30,
         "weight": 70.3,
         "is_human": True,
+        "hat_id": None,
     }
 
 
@@ -35,6 +36,7 @@ def character_dto():
         "age": 33,
         "weight": 70.,
         "is_human": True,
+        "hat_id": None,
     })
 
 
@@ -59,6 +61,22 @@ def persisted_character_dto(character_repository):
         "age": 20,
         "weight": 59.8,
         "is_human": False,
+        "hat_id": None,
+    })
+    character_repository.add_character(character_dto=character_dto)
+    return character_dto
+
+
+@pytest.fixture
+def persisted_character_with_hat_dto(character_repository, persisted_garment_dto):
+    from service.dtos.character_dto import CharacterDTO
+    character_dto = CharacterDTO().from_dict({
+        "id": uuid.uuid4(),
+        "name": "dummy_character_name",
+        "age": 20,
+        "weight": 59.8,
+        "is_human": False,
+        "hat_id": persisted_garment_dto.id,
     })
     character_repository.add_character(character_dto=character_dto)
     return character_dto
@@ -75,6 +93,27 @@ def persisted_character_dto_population(character_repository):
             "age": 20 + x,
             "weight": 59.8 + x,
             "is_human": True,
+            "hat_id": None,
+        })
+        character_repository.add_character(character_dto=character_dto)
+        character_dto_population.append(character_dto)
+    return character_dto_population
+
+
+@pytest.fixture
+def persisted_character_with_hat_dto_population(
+    character_repository, persisted_garment_dto
+):
+    from service.dtos.character_dto import CharacterDTO
+    character_dto_population = []
+    for x in range(1, 6):
+        character_dto = CharacterDTO().from_dict({
+            "id": uuid.uuid4(),
+            "name": "dummy_character_name" + str(x),
+            "age": 20 + x,
+            "weight": 59.8 + x,
+            "is_human": True,
+            "hat_id": persisted_garment_dto.id,
         })
         character_repository.add_character(character_dto=character_dto)
         character_dto_population.append(character_dto)

@@ -1,3 +1,6 @@
+import uuid
+from typing import Optional
+
 from service.exceptions import NotExpectedValueError
 from service.dtos.base_dto import BaseDTO
 
@@ -56,16 +59,18 @@ class CharacterDTO(BaseDTO):
             )
 
     @property
-    def is_human(self: object) -> bool:
-        return self.__is_human
+    def hat_id(self: object) -> uuid.UUID:
+        return self.__hat_id
 
-    @is_human.setter
-    def is_human(self: object, is_human: bool) -> None:
-        if isinstance(is_human, bool):
-            self.__is_human = is_human
+    @hat_id.setter
+    def hat_id(self: object, hat_id: uuid.UUID) -> None:
+        if isinstance(hat_id, uuid.UUID) or hat_id is None:
+            self.__hat_id = hat_id
         else:
             raise NotExpectedValueError(
-                variable_name="is_human", expected_type=bool, given_type=type(is_human)
+                variable_name="hat_id",
+                expected_type=Optional[uuid.UUID],
+                given_type=type(hat_id),
             )
 
     def asdict(self: object) -> dict:
@@ -75,6 +80,7 @@ class CharacterDTO(BaseDTO):
             "age": self.__age,
             "weight": self.__weight,
             "is_human": self.__is_human,
+            "hat_id": self.__hat_id,
         })
         return dto_dict
 
@@ -85,5 +91,6 @@ class CharacterDTO(BaseDTO):
             "age": self.__age,
             "weight": self.__weight,
             "is_human": self.__is_human,
+            "hat_id": None if self.__hat_id is None else str(self.__hat_id),
         })
         return serialized_dict

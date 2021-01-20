@@ -1,4 +1,5 @@
 import logging
+import uuid
 
 from flask import request
 from flask_restplus import Resource
@@ -15,6 +16,11 @@ class CharactersHandler(Resource):
     def post(self: object):
         logging.debug("CharactersHandler.post")
         json_data = request.get_json()
+        json_data["character_hat_id"] = (
+            None
+            if json_data["character_hat_id"] is None
+            else uuid.UUID(json_data["character_hat_id"])
+        )
         character_id = self.__domain.register_character(**json_data)
         return {"character_id": str(character_id)}
 

@@ -1,6 +1,6 @@
 import uuid
 from abc import ABC, abstractmethod
-from typing import List
+from typing import List, Optional
 
 from service.dtos.character_dto import CharacterDTO
 
@@ -13,6 +13,7 @@ class CharacterManagementInterface(ABC):
         character_age: int,
         character_weight: float,
         character_is_human: bool,
+        character_hat_id: Optional[uuid.UUID],
     ) -> uuid.UUID:
         pass
 

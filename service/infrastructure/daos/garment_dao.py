@@ -1,9 +1,11 @@
 from sqlalchemy import Column, Enum
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 from service.dtos.color import Color
 from service.dtos.garment_dto import GarmentDTO, GarmentArticle
 from service.infrastructure.daos.dao_base import DAOBase
+# from service.infrastructure.daos.character_dao import CharacterDAO
 
 
 class GarmentDAO(DAOBase):
@@ -20,6 +22,7 @@ class GarmentDAO(DAOBase):
     color = Column(
         Enum(Color, name="color", values_callable=lambda obj: [e.value for e in obj])
     )
+    characters = relationship("CharacterDAO", back_populates="clothes", uselist=False)
 
     @classmethod
     def from_dto(cls: object, garment_dto: GarmentDTO) -> object:
