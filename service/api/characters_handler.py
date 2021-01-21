@@ -1,10 +1,12 @@
+import http
 import logging
-import uuid
 
-from flask import request
+import pydantic
+from flask import request, Response
 from flask_restplus import Resource
 
 from service.domain.character_management_interface import CharacterManagementInterface
+from service.api import characters_models
 
 
 class CharactersHandler(Resource):
@@ -15,13 +17,17 @@ class CharactersHandler(Resource):
 
     def post(self: object):
         logging.debug("CharactersHandler.post")
-        json_data = request.get_json()
-        json_data["character_hat_id"] = (
-            None
-            if json_data["character_hat_id"] is None
-            else uuid.UUID(json_data["character_hat_id"])
-        )
-        character_id = self.__domain.register_character(**json_data)
+        try:
+            input_data = characters_models.POSTCharactersInput(
+                **request.get_json()
+            ).dict()
+        except pydantic.ValidationError as error:
+            return Response(
+                response=error.json(),
+                status=http.HTTPStatus.UNPROCESSABLE_ENTITY,
+                mimetype="application/json",
+            )
+        character_id = self.__domain.register_character(**input_data)
         return {"character_id": str(character_id)}
 
     def get(self: object):

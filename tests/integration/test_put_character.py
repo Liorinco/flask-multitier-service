@@ -4,19 +4,25 @@ from service.dtos.character_dto import CharacterDTO
 def test_update_character(
     client, persisted_character_dto, persisted_garment_dto, character_repository
 ):
-    new_character_dict = {
-        "name": "updated_" + persisted_character_dto.name,
-        "age": 3 + persisted_character_dto.age,
-        "weight": 3. + persisted_character_dto.weight,
-        "is_human": not persisted_character_dto.is_human,
-        "hat_id": persisted_garment_dto.id,
+    new_character_payload = {
+        "character_name": "updated_" + persisted_character_dto.name,
+        "character_age": 3 + persisted_character_dto.age,
+        "character_weight": 3. + persisted_character_dto.weight,
+        "character_is_human": not persisted_character_dto.is_human,
+        "character_hat_id": persisted_garment_dto.id,
     }
     response = client.put(
-        f"/characters/{(persisted_character_dto.id)}", json=new_character_dict
+        f"/characters/{(persisted_character_dto.id)}", json=new_character_payload
     )
 
     assert response.status_code == 200
     assert response.json is None
-    new_character_dict["id"] = persisted_character_dto.id
-    expected_character_dto = CharacterDTO().from_dict(new_character_dict)
+    expected_character_dto = CharacterDTO().from_dict({
+        "id": persisted_character_dto.id,
+        "name": new_character_payload["character_name"],
+        "age": new_character_payload["character_age"],
+        "weight": new_character_payload["character_weight"],
+        "is_human": new_character_payload["character_is_human"],
+        "hat_id": new_character_payload["character_hat_id"],
+    })
     assert character_repository.find_characters() == [expected_character_dto]
