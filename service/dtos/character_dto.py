@@ -1,7 +1,7 @@
 import uuid
 from typing import Optional
 
-from service.exceptions import NotExpectedValueError
+from service.exceptions import Conflict, NotExpectedValueError
 from service.dtos.base_dto import BaseDTO
 
 
@@ -51,12 +51,13 @@ class CharacterDTO(BaseDTO):
 
     @is_human.setter
     def is_human(self: object, is_human: bool) -> None:
-        if isinstance(is_human, bool):
-            self.__is_human = is_human
-        else:
+        if not isinstance(is_human, bool):
             raise NotExpectedValueError(
                 variable_name="is_human", expected_type=bool, given_type=type(is_human)
             )
+
+        self._raise_conflict_if_non_human_wears_hat(is_human=is_human)
+        self.__is_human = is_human
 
     @property
     def hat_id(self: object) -> uuid.UUID:
@@ -64,14 +65,15 @@ class CharacterDTO(BaseDTO):
 
     @hat_id.setter
     def hat_id(self: object, hat_id: uuid.UUID) -> None:
-        if isinstance(hat_id, uuid.UUID) or hat_id is None:
-            self.__hat_id = hat_id
-        else:
+        if not (hat_id is None or isinstance(hat_id, uuid.UUID)):
             raise NotExpectedValueError(
                 variable_name="hat_id",
                 expected_type=Optional[uuid.UUID],
                 given_type=type(hat_id),
             )
+
+        self._raise_conflict_if_non_human_wears_hat(hat_id=hat_id)
+        self.__hat_id = hat_id
 
     def asdict(self: object) -> dict:
         dto_dict = super().asdict()
@@ -94,3 +96,18 @@ class CharacterDTO(BaseDTO):
             "hat_id": None if self.__hat_id is None else str(self.__hat_id),
         })
         return serialized_dict
+
+    def _raise_conflict_if_non_human_wears_hat(
+        self, *, is_human=Ellipsis, hat_id=Ellipsis
+    ):
+        if is_human is Ellipsis and hasattr(self, "_CharacterDTO__is_human"):
+            is_human = self.__is_human
+        if hat_id is Ellipsis and hasattr(self, "_CharacterDTO__hat_id"):
+            hat_id = self.__hat_id
+        if not (
+            (not hasattr(self, "_CharacterDTO__is_human") and is_human is Ellipsis) or
+            (not hasattr(self, "_CharacterDTO__hat_id") and hat_id is Ellipsis) or
+            is_human is True or
+            hat_id is None
+        ):
+            raise Conflict(error_message="Only humans can wear hats")

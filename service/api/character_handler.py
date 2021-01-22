@@ -9,6 +9,7 @@ from flask_restplus import Resource
 from service.api import characters_models
 from service.domain.character_management_interface import CharacterManagementInterface
 from service.dtos.character_dto import CharacterDTO
+from service.exceptions import Conflict
 
 
 class CharacterHandler(Resource):
@@ -34,17 +35,23 @@ class CharacterHandler(Resource):
                 status=http.HTTPStatus.UNPROCESSABLE_ENTITY,
                 mimetype="application/json",
             )
-        character_dto = CharacterDTO().from_dict(
-            {
-                "id": character_id,
-                "name": input_data.character_name,
-                "age": input_data.character_age,
-                "weight": input_data.character_weight,
-                "is_human": input_data.character_is_human,
-                "hat_id": input_data.character_hat_id,
-            }
-        )
-        self.__domain.update_character(character_dto=character_dto)
+        try:
+            character_dto = CharacterDTO().from_dict(
+                {
+                    "id": character_id,
+                    "name": input_data.character_name,
+                    "age": input_data.character_age,
+                    "weight": input_data.character_weight,
+                    "is_human": input_data.character_is_human,
+                    "hat_id": input_data.character_hat_id,
+                }
+            )
+            self.__domain.update_character(character_dto=character_dto)
+        except Conflict as e:
+            return Response(
+                response=str(e),
+                status=http.HTTPStatus.CONFLICT,
+            )
 
     def delete(self: object, character_id: uuid.UUID):
         logging.debug(f"CharacterHandler.delete(character_id={character_id})")

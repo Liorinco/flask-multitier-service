@@ -26,3 +26,21 @@ def test_update_character(
         "hat_id": new_character_payload["character_hat_id"],
     })
     assert character_repository.find_characters() == [expected_character_dto]
+
+
+def test_update_non_human_to_wear_hat(
+    client, persisted_character_dto, persisted_garment_dto, character_repository
+):
+    new_character_payload = {
+        "character_name": persisted_character_dto.name,
+        "character_age": persisted_character_dto.age,
+        "character_weight": persisted_character_dto.weight,
+        "character_is_human": persisted_character_dto.is_human,
+        "character_hat_id": persisted_garment_dto.id,
+    }
+    response = client.put(
+        f"/characters/{(persisted_character_dto.id)}", json=new_character_payload
+    )
+
+    assert response.status_code == 409
+    assert response.data == b"Only humans can wear hats"

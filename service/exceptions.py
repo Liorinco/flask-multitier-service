@@ -11,3 +11,8 @@ class NotExpectedValueError(ValueError):
         )
         error_message += f" ({message_detail})" if message_detail else ""
         super().__init__(error_message)
+
+
+class Conflict(ValueError):
+    def __init__(self: object, error_message: str) -> object:
+        super().__init__(error_message)

@@ -68,14 +68,14 @@ def persisted_character_dto(character_repository):
 
 
 @pytest.fixture
-def persisted_character_with_hat_dto(character_repository, persisted_garment_dto):
+def persisted_human_with_hat_dto(character_repository, persisted_garment_dto):
     from service.dtos.character_dto import CharacterDTO
     character_dto = CharacterDTO().from_dict({
         "id": uuid.uuid4(),
         "name": "dummy_character_name",
         "age": 20,
         "weight": 59.8,
-        "is_human": False,
+        "is_human": True,
         "hat_id": persisted_garment_dto.id,
     })
     character_repository.add_character(character_dto=character_dto)
@@ -101,7 +101,7 @@ def persisted_character_dto_population(character_repository):
 
 
 @pytest.fixture
-def persisted_character_with_hat_dto_population(
+def persisted_human_with_hat_dto_population(
     character_repository, persisted_garment_dto
 ):
     from service.dtos.character_dto import CharacterDTO

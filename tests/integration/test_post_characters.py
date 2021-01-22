@@ -23,7 +23,7 @@ def test_create_character(client, character_dto, character_repository):
     assert character_dtos == [character_dto]
 
 
-def test_create_character_with_hat(
+def test_create_human_with_hat(
     client, character_dto, persisted_garment_dto, character_repository
 ):
     character_dto.hat_id = persisted_garment_dto.id
@@ -44,3 +44,20 @@ def test_create_character_with_hat(
     character_dtos = character_repository.find_characters()
     character_dto.id = uuid.UUID(retrieved_character_uuid)
     assert character_dtos == [character_dto]
+
+
+def test_create_non_human_with_hat(
+    client, character_dict, persisted_garment_dto, character_repository
+):
+    character_dict["hat_id"] = persisted_garment_dto.id
+    payload = {
+        "character_name": character_dict["name"],
+        "character_age": character_dict["age"],
+        "character_weight": character_dict["weight"],
+        "character_is_human": False,
+        "character_hat_id": character_dict["hat_id"],
+    }
+    response = client.post("/characters", json=payload)
+
+    assert response.status_code == 409
+    assert response.data == b"Only humans can wear hats"

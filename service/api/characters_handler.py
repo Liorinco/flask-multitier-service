@@ -5,8 +5,9 @@ import pydantic
 from flask import request, Response
 from flask_restplus import Resource
 
-from service.domain.character_management_interface import CharacterManagementInterface
 from service.api import characters_models
+from service.domain.character_management_interface import CharacterManagementInterface
+from service.exceptions import Conflict
 
 
 class CharactersHandler(Resource):
@@ -21,13 +22,19 @@ class CharactersHandler(Resource):
             input_data = characters_models.POSTCharactersInput(
                 **request.get_json()
             ).dict()
-        except pydantic.ValidationError as error:
+        except pydantic.ValidationError as e:
             return Response(
-                response=error.json(),
+                response=e.json(),
                 status=http.HTTPStatus.UNPROCESSABLE_ENTITY,
                 mimetype="application/json",
             )
-        character_id = self.__domain.register_character(**input_data)
+        try:
+            character_id = self.__domain.register_character(**input_data)
+        except Conflict as e:
+            return Response(
+                response=str(e),
+                status=http.HTTPStatus.CONFLICT,
+            )
         return {"character_id": str(character_id)}
 
     def get(self: object):

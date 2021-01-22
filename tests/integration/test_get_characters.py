@@ -21,7 +21,7 @@ def test_find_characters(client, persisted_character_dto_population):
     assert response.json == expected_response
 
 
-def test_find_characters_with_hat(client, persisted_character_with_hat_dto_population):
+def test_find_characters_with_hat(client, persisted_human_with_hat_dto_population):
     response = client.get("/characters")
 
     assert response.status_code == 200
@@ -29,7 +29,7 @@ def test_find_characters_with_hat(client, persisted_character_with_hat_dto_popul
         "characters": sorted(
             [
                 character_dto.as_serialized_dict()
-                for character_dto in persisted_character_with_hat_dto_population
+                for character_dto in persisted_human_with_hat_dto_population
             ],
             key=lambda character_dict: character_dict["id"])
     }
