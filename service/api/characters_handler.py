@@ -7,7 +7,7 @@ from flask_restplus import Resource
 
 from service.api import characters_models
 from service.domain.character_management_interface import CharacterManagementInterface
-from service.exceptions import Conflict
+from service.exceptions import Conflict, NotExpectedValueError
 
 
 class CharactersHandler(Resource):
@@ -34,6 +34,11 @@ class CharactersHandler(Resource):
             return Response(
                 response=str(e),
                 status=http.HTTPStatus.CONFLICT,
+            )
+        except NotExpectedValueError as e:
+            return Response(
+                response=str(e),
+                status=http.HTTPStatus.UNPROCESSABLE_ENTITY,
             )
         return {"character_id": str(character_id)}
 

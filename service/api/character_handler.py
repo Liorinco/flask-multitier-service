@@ -9,7 +9,7 @@ from flask_restplus import Resource
 from service.api import characters_models
 from service.domain.character_management_interface import CharacterManagementInterface
 from service.dtos.character_dto import CharacterDTO
-from service.exceptions import Conflict
+from service.exceptions import Conflict, NotExpectedValueError
 
 
 class CharacterHandler(Resource):
@@ -51,6 +51,11 @@ class CharacterHandler(Resource):
             return Response(
                 response=str(e),
                 status=http.HTTPStatus.CONFLICT,
+            )
+        except NotExpectedValueError as e:
+            return Response(
+                response=str(e),
+                status=http.HTTPStatus.UNPROCESSABLE_ENTITY,
             )
 
     def delete(self: object, character_id: uuid.UUID):

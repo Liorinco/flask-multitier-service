@@ -3,7 +3,7 @@ import uuid
 import pytest
 
 from service.dtos.character_dto import CharacterDTO
-from service.exceptions import Conflict
+from service.exceptions import Conflict, NotExpectedValueError
 
 
 def test_character_dto_instance(character_dict):
@@ -73,3 +73,13 @@ class TestCHaracterDTOYoungHumanTooBig:
         character_dict["weight"] = self.FAIL_WEIGHT_LIMIT - 0.1
         dto = CharacterDTO().from_dict(character_dict)
         assert dto.asdict() == character_dict
+
+
+def test_character_dto_age_cannot_be_negative(character_dict):
+    age = -1
+    character_dict["age"] = age
+    with pytest.raises(NotExpectedValueError) as e:
+        CharacterDTO().from_dict(character_dict)
+    assert str(e.value) == (
+        f"`age` expects `{type(age)}`, but `{type(age)}` is given (must be positive)"
+    )

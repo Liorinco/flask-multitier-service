@@ -25,9 +25,12 @@ class CharacterDTO(BaseDTO):
 
     @age.setter
     def age(self: object, age: int) -> None:
-        if not isinstance(age, int):
+        if not isinstance(age, int) or age < 0:
             raise NotExpectedValueError(
-                variable_name="age", expected_type=int, given_type=type(age)
+                variable_name="age",
+                expected_type=int,
+                given_type=type(age),
+                message_detail="must be positive"
             )
 
         self._raise_conflict_if_young_human_is_too_big(age=age)

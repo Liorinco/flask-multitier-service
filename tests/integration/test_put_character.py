@@ -66,3 +66,24 @@ def test_update_young_human_too_big(
     assert response.data.decode("utf-8") == (
         f"Humans under or {age_limit} years old cannot weigh more than {weight_limit} kg"
     )
+
+
+def test_update_character_with_negative_age(
+    client, persisted_character_dto, character_repository
+):
+    age = -1
+    new_character_payload = {
+        "character_name": persisted_character_dto.name,
+        "character_age": age,
+        "character_weight": persisted_character_dto.weight,
+        "character_is_human": persisted_character_dto.is_human,
+        "character_hat_id": persisted_character_dto.hat_id,
+    }
+    response = client.put(
+        f"/characters/{(persisted_character_dto.id)}", json=new_character_payload
+    )
+
+    assert response.status_code == 422
+    assert response.data.decode("utf-8") == (
+        f"`age` expects `{type(age)}`, but `{type(age)}` is given (must be positive)"
+    )
