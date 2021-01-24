@@ -19,6 +19,10 @@ class CharacterRepositoryInterface(ABC):
         pass
 
     @abstractmethod
+    def find_characters_by_hat_id(self: object, hat_id: uuid.UUID) -> CharacterDTO:
+        pass
+
+    @abstractmethod
     def update_character(self: object, character_dto: CharacterDTO) -> None:
         pass
 

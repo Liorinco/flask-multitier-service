@@ -38,6 +38,11 @@ class SQLAlchemyCharacterRepository(CharacterRepositoryInterface):
         )
         return self._crud_repository.find_by_id(dto_id=character_id)
 
+    def find_characters_by_hat_id(self: object, hat_id: uuid.UUID) -> List[CharacterDTO]:
+        logging.debug("SQLAlchemyCharacterRepository.find_characters_by_hat_id()")
+        daos = self.db_session.query(CharacterDAO).filter(CharacterDAO.hat_id == hat_id)
+        return [dao.to_dto() for dao in daos]
+
     def update_character(self: object, character_dto: CharacterDTO) -> None:
         logging.debug(
             "SQLAlchemyCharacterRepository.update_character("
