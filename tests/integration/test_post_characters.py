@@ -101,3 +101,21 @@ def test_create_character_with_negative_age(
     assert response.data.decode("utf-8") == (
         f"`age` expects `{type(age)}`, but `{type(age)}` is given (must be positive)"
     )
+
+
+def test_create_character_with_p_in_name_and_yellow_hat(
+    client, character_dict, persisted_yellow_hat_dto, character_repository
+):
+    payload = {
+        "character_name": "name_with_p_letter",
+        "character_age": character_dict["age"],
+        "character_weight": character_dict["weight"],
+        "character_is_human": character_dict["is_human"],
+        "character_hat_id": persisted_yellow_hat_dto.id,
+    }
+    response = client.post("/characters", json=payload)
+
+    assert response.status_code == 409
+    assert response.data.decode("utf-8") == (
+        "Characters whose a 'p' is in there name cannot where a yellow hat"
+    )

@@ -87,3 +87,23 @@ def test_update_character_with_negative_age(
     assert response.data.decode("utf-8") == (
         f"`age` expects `{type(age)}`, but `{type(age)}` is given (must be positive)"
     )
+
+
+def test_update_character_with_p_in_name_and_yellow_hat(
+    client, persisted_character_dto, persisted_yellow_hat_dto, character_repository
+):
+    new_character_payload = {
+        "character_name": "name_with_p_letter",
+        "character_age": persisted_character_dto.age,
+        "character_weight": persisted_character_dto.weight,
+        "character_is_human": True,
+        "character_hat_id": persisted_yellow_hat_dto.id,
+    }
+    response = client.put(
+        f"/characters/{(persisted_character_dto.id)}", json=new_character_payload
+    )
+
+    assert response.status_code == 409
+    assert response.data.decode("utf-8") == (
+        "Characters whose a 'p' is in there name cannot where a yellow hat"
+    )

@@ -124,7 +124,7 @@ def persisted_human_with_hat_dto_population(
 def garment_dict():
     from service.dtos.color import Color
     from service.dtos.garment_dto import GarmentArticle
-    return {"id": uuid.uuid4(), "article": GarmentArticle.HAT, "color": Color.YELLOW}
+    return {"id": uuid.uuid4(), "article": GarmentArticle.HAT, "color": Color.PURPLE}
 
 
 @pytest.fixture
@@ -149,6 +149,25 @@ def garment_repository(sqlalchemy_client):
 def persisted_garment_dto(garment_repository, garment_dto):
     garment_repository.add_garment(garment_dto=garment_dto)
     return garment_dto
+
+
+@pytest.fixture
+def yellow_hat_dict():
+    from service.dtos.color import Color
+    from service.dtos.garment_dto import GarmentArticle
+    return {"id": uuid.uuid4(), "article": GarmentArticle.HAT, "color": Color.YELLOW}
+
+
+@pytest.fixture
+def yellow_hat_dto(yellow_hat_dict):
+    from service.dtos.garment_dto import GarmentDTO
+    return GarmentDTO().from_dict(yellow_hat_dict)
+
+
+@pytest.fixture
+def persisted_yellow_hat_dto(garment_repository, yellow_hat_dto):
+    garment_repository.add_garment(garment_dto=yellow_hat_dto)
+    return yellow_hat_dto
 
 
 @pytest.fixture

@@ -26,7 +26,9 @@ def configure_application():
         sqlalchemy_client=database_client
     )
     garment_repository = SQLAlchemyGarmentRepository(sqlalchemy_client=database_client)
-    character_management_domain = CharacterManagement(repository=character_repository)
+    character_management_domain = CharacterManagement(
+        repository=character_repository, garment_repository=garment_repository
+    )
     garment_management_domain = GarmentManagement(repository=garment_repository)
     return FlaskApplication(
         host=SERVICE_HOST,
