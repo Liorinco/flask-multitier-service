@@ -44,3 +44,25 @@ def test_update_non_human_to_wear_hat(
 
     assert response.status_code == 409
     assert response.data == b"Only humans can wear hats"
+
+
+def test_update_young_human_too_big(
+    client, persisted_character_dto, character_repository
+):
+    age_limit = 10
+    weight_limit = 80.
+    new_character_payload = {
+        "character_name": persisted_character_dto.name,
+        "character_age": age_limit,
+        "character_weight": weight_limit + 0.1,
+        "character_is_human": True,
+        "character_hat_id": persisted_character_dto.hat_id,
+    }
+    response = client.put(
+        f"/characters/{(persisted_character_dto.id)}", json=new_character_payload
+    )
+
+    assert response.status_code == 409
+    assert response.data.decode("utf-8") == (
+        f"Humans under or {age_limit} years old cannot weigh more than {weight_limit} kg"
+    )

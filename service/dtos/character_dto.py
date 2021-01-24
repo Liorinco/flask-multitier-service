@@ -25,12 +25,13 @@ class CharacterDTO(BaseDTO):
 
     @age.setter
     def age(self: object, age: int) -> None:
-        if isinstance(age, int):
-            self.__age = age
-        else:
+        if not isinstance(age, int):
             raise NotExpectedValueError(
                 variable_name="age", expected_type=int, given_type=type(age)
             )
+
+        self._raise_conflict_if_young_human_is_too_big(age=age)
+        self.__age = age
 
     @property
     def weight(self: object) -> float:
@@ -38,12 +39,13 @@ class CharacterDTO(BaseDTO):
 
     @weight.setter
     def weight(self: object, weight: float) -> None:
-        if isinstance(weight, float):
-            self.__weight = weight
-        else:
+        if not isinstance(weight, float):
             raise NotExpectedValueError(
                 variable_name="weight", expected_type=float, given_type=type(weight)
             )
+
+        self._raise_conflict_if_young_human_is_too_big(weight=weight)
+        self.__weight = weight
 
     @property
     def is_human(self: object) -> bool:
@@ -57,6 +59,7 @@ class CharacterDTO(BaseDTO):
             )
 
         self._raise_conflict_if_non_human_wears_hat(is_human=is_human)
+        self._raise_conflict_if_young_human_is_too_big(is_human=is_human)
         self.__is_human = is_human
 
     @property
@@ -111,3 +114,29 @@ class CharacterDTO(BaseDTO):
             hat_id is None
         ):
             raise Conflict(error_message="Only humans can wear hats")
+
+    def _raise_conflict_if_young_human_is_too_big(
+        self, *, is_human=Ellipsis, age=Ellipsis, weight=Ellipsis
+    ):
+        age_limit = 10
+        weight_limit = 80.
+        if is_human is Ellipsis and hasattr(self, "_CharacterDTO__is_human"):
+            is_human = self.__is_human
+        if age is Ellipsis and hasattr(self, "_CharacterDTO__age"):
+            age = self.__age
+        if weight is Ellipsis and hasattr(self, "_CharacterDTO__weight"):
+            weight = self.__weight
+        if not (
+            (not hasattr(self, "_CharacterDTO__is_human") and is_human is Ellipsis) or
+            (not hasattr(self, "_CharacterDTO__age") and age is Ellipsis) or
+            (not hasattr(self, "_CharacterDTO__weight") and weight is Ellipsis) or
+            is_human is False or
+            age > age_limit or
+            weight <= weight_limit
+        ):
+            raise Conflict(
+                error_message=(
+                    f"Humans under or {age_limit} years old "
+                    f"cannot weigh more than {weight_limit} kg"
+                )
+            )

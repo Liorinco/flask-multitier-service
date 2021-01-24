@@ -61,3 +61,24 @@ def test_create_non_human_with_hat(
 
     assert response.status_code == 409
     assert response.data == b"Only humans can wear hats"
+
+
+def test_create_young_human_too_big(
+    client, character_dict, persisted_garment_dto, character_repository
+):
+    age_limit = 10
+    weight_limit = 80.
+    character_dict["hat_id"] = persisted_garment_dto.id
+    payload = {
+        "character_name": character_dict["name"],
+        "character_age": age_limit,
+        "character_weight": weight_limit + 0.1,
+        "character_is_human": True,
+        "character_hat_id": character_dict["hat_id"],
+    }
+    response = client.post("/characters", json=payload)
+
+    assert response.status_code == 409
+    assert response.data.decode("utf-8") == (
+        f"Humans under or {age_limit} years old cannot weigh more than {weight_limit} kg"
+    )
