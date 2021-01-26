@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime
 
 import pytest
 
@@ -212,3 +213,13 @@ def application():
 @pytest.fixture
 def client(application):
     return application.test_client()
+
+
+@pytest.fixture
+def data_dict():
+    return {
+        "id": uuid.uuid4(),
+        "created_date": datetime.now(),
+        "name": "dummy_character_name",
+        "value": 12.3,
+    }
