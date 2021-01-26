@@ -1,16 +1,20 @@
 import uuid
 from abc import ABC, abstractclassmethod
+from datetime import datetime
 
 from service.dtos.base_dto import BaseDTO
 from service.dtos.character_dto import CharacterDTO
 from service.dtos.color import Color
+from service.dtos.data_dto import DataDTO
 from service.dtos.garment_dto import GarmentDTO, GarmentArticle
 from service.infrastructure.daos.character_dao import CharacterDAO
+from service.infrastructure.daos.data_dao import DataDAO
 from service.infrastructure.daos.garment_dao import GarmentDAO
 from service.infrastructure.sqlalchemy_character_repository import (
     SQLAlchemyCharacterRepository
 )
 from service.infrastructure.sqlalchemy_client import SQLAlchemyClient
+from service.infrastructure.sqlalchemy_data_repository import SQLAlchemyDataRepository
 from service.infrastructure.sqlalchemy_garment_repository import (
     SQLAlchemyGarmentRepository
 )
@@ -155,4 +159,34 @@ class GarmentFactory(EntityFactory):
         updated_dto.article = entity_dto.article
         colors = [color for color in Color if color != entity_dto.color]
         updated_dto.color = colors[0]
+        return updated_dto
+
+
+class DataFactory(EntityFactory):
+    dto_class = DataDTO
+    dao_class = DataDAO
+    repository_class = SQLAlchemyDataRepository
+    repository_add_entity_method_name = "add_data"
+    repository_find_entities_method_name = "find_data"
+    repository_find_entity_by_id_method_name = "find_data_by_id"
+    repository_update_entity_method_name = "update_data"
+    repository_reset_entities_method_name = "reset"
+    repository_delete_entity_by_id_method_name = "delete_data_by_id"
+
+    @classmethod
+    def generate_dict(cls):
+        return {
+            "id": uuid.uuid4(),
+            "created_date": datetime.now(),
+            "name": "dumm_data_name",
+            "value": 70.3,
+        }
+
+    @classmethod
+    def generate_entity_update(cls, entity_dto: DataDTO) -> DataDTO:
+        updated_dto = DataDTO()
+        updated_dto.id = entity_dto.id
+        updated_dto.created_date = datetime.now()
+        updated_dto.name = "updated_" + entity_dto.name
+        updated_dto.value = entity_dto.value + 8.6
         return updated_dto

@@ -7,7 +7,7 @@ import config
 
 config.configure()
 
-from helpers import CharacterFactory, GarmentFactory
+from helpers import CharacterFactory, DataFactory, GarmentFactory
 
 
 @pytest.fixture(scope="session")
@@ -187,7 +187,7 @@ def persisted_garment_dto_population(garment_repository):
     return garment_dto_population
 
 
-@pytest.fixture(params=[CharacterFactory, GarmentFactory])
+@pytest.fixture(params=[CharacterFactory, DataFactory, GarmentFactory])
 def entity_factory(request):
     return request.param
 
