@@ -1,5 +1,6 @@
 from sqlalchemy import Column, DateTime, Float, func, String
 from sqlalchemy.dialects.postgresql import UUID
+# from sqlalchemy.orm import relationship
 
 from service.dtos.data_dto import DataDTO
 from service.infrastructure.daos.dao_base import DAOBase
@@ -12,6 +13,7 @@ class DataDAO(DAOBase):
     created_date = Column(DateTime, server_default=func.now())
     name = Column(String(50))
     value = Column(Float)
+    # dataset = relationship("DataSetDAO", back_populates="data")
 
     @classmethod
     def from_dto(cls: object, data_dto: DataDTO) -> object:

@@ -223,3 +223,19 @@ def data_dict():
         "name": "dummy_character_name",
         "value": 12.3,
     }
+
+
+@pytest.fixture
+def data_dto(data_dict):
+    from service.dtos.data_dto import DataDTO
+    return DataDTO().from_dict(data_dict)
+
+
+@pytest.fixture
+def dataset_dict(data_dto):
+    return {
+        "id": uuid.uuid4(),
+        "created_date": datetime.now(),
+        "aggregates": {"moyenne": 10.4},
+        "dataset": [data_dto],
+    }
