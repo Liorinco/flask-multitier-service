@@ -28,7 +28,7 @@ class DataSetDTO(BaseDTO):
 
     @aggregates.setter
     def aggregates(self: object, aggregates: dict) -> None:
-        if not isinstance(aggregates, dict):
+        if not (aggregates is None or isinstance(aggregates, dict)):
             raise NotExpectedValueError(
                 variable_name="aggregates",
                 expected_type=dict,
@@ -43,15 +43,13 @@ class DataSetDTO(BaseDTO):
 
     @dataset.setter
     def dataset(self: object, dataset: List[DataDTO]) -> None:
-        if (
-            not isinstance(dataset, list) or
-            False in map(lambda x: isinstance(x, DataDTO), dataset)
-        ):
-            raise NotExpectedValueError(
-                variable_dataset="dataset",
-                expected_type=List[DataDTO],
-                given_type=type(dataset)
-            )
+        if not (dataset is None or isinstance(dataset, list)):
+            if False in map(lambda x: isinstance(x, DataDTO), dataset):
+                raise NotExpectedValueError(
+                    variable_name="dataset",
+                    expected_type=List[DataDTO],
+                    given_type=type(dataset)
+                )
 
         self.__dataset = dataset
 

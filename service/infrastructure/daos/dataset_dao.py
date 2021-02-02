@@ -4,6 +4,7 @@ from sqlalchemy.orm import relationship
 
 from service.dtos.dataset_dto import DataSetDTO
 from service.infrastructure.daos.dao_base import DAOBase
+from service.infrastructure.daos.data_dao import DataDAO
 
 
 class DataSetDAO(DAOBase):
@@ -12,8 +13,8 @@ class DataSetDAO(DAOBase):
     id = Column(UUID(as_uuid=True), primary_key=True)
     created_date = Column(DateTime, server_default=func.now())
     aggregates = Column(JSONB(50))
-    # data = relationship("DataDAO", back_populates="datasets", uselist=True)
-    data = relationship("DataDAO", secondary="datasets_data", backref="datasets")
+    # dataset = relationship("DataDAO", back_populates="datasets", uselist=True)
+    dataset = relationship("DataDAO", secondary="datasets_data", backref="datasets", uselist=True)
 
     @classmethod
     def from_dto(cls: object, dataset_dto: DataSetDTO) -> object:
@@ -21,7 +22,7 @@ class DataSetDAO(DAOBase):
             id=dataset_dto.id,
             created_date=dataset_dto.created_date,
             aggregates=dataset_dto.aggregates,
-            data=dataset_dto.data
+            dataset=[DataDAO.from_dto(data_dto) for data_dto in dataset_dto.dataset]
         )
 
     def asdict(self: object) -> dict:
@@ -29,7 +30,7 @@ class DataSetDAO(DAOBase):
             "id": self.id,
             "created_date": self.created_date,
             "aggregates": self.aggregates,
-            "data": self.data
+            "dataset": self.dataset
         }
 
     def to_dto(self: object) -> DataSetDTO:

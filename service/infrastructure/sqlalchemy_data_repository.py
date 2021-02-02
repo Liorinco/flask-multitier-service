@@ -2,11 +2,12 @@ import logging
 import uuid
 from typing import List
 
-from service.infrastructure.sqlalchemy_client import SQLAlchemyClient
+from sqlalchemy import Table
 
 from service.dtos.data_dto import DataDTO
 from service.infrastructure.daos.data_dao import DataDAO
 from service.infrastructure.data_repository_interface import DataRepositoryInterface
+from service.infrastructure.sqlalchemy_client import SQLAlchemyClient
 from service.infrastructure.sqlalchemy_crud_repository import SQLAlchemyCRUDRepository
 
 
@@ -45,6 +46,8 @@ class SQLAlchemyDataRepository(DataRepositoryInterface):
 
     def reset(self: object) -> None:
         logging.debug("SQLAlchemyDataRepository.reset()")
+        self.db_session.query(Table("datasets_data")).delete()
+        self.db_session.commit()
         self._crud_repository.reset()
 
     def delete_data_by_id(self: object, data_id: uuid.UUID) -> None:

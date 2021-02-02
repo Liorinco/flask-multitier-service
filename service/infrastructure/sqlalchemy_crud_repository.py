@@ -35,12 +35,16 @@ class SQLAlchemyCRUDRepository:
 
     def update(self: object, dto: BaseDTO) -> None:
         logging.debug(f"SQLAlchemyCRUDRepository.update(dto={dto})")
+        # breakpoint()
         dao = self.dao_class.from_dto(dto)
-        (
-            self.db_session.query(self.dao_class)
-            .filter(self.dao_class.id == str(dto.id))
-            .update(dao.asdict())
-        )
+        query = self.db_session.query(self.dao_class)
+        query.filter(self.dao_class.id == str(dto.id))
+        query.update(dao.asdict())
+        # (
+        #     self.db_session.query(self.dao_class)
+        #     .filter(self.dao_class.id == str(dto.id))
+        #     .update(dao.asdict())
+        # )
         self.db_session.commit()
 
     def reset(self: object) -> None:

@@ -6,15 +6,20 @@ from service.dtos.base_dto import BaseDTO
 from service.dtos.character_dto import CharacterDTO
 from service.dtos.color import Color
 from service.dtos.data_dto import DataDTO
+from service.dtos.dataset_dto import DataSetDTO
 from service.dtos.garment_dto import GarmentDTO, GarmentArticle
 from service.infrastructure.daos.character_dao import CharacterDAO
 from service.infrastructure.daos.data_dao import DataDAO
+from service.infrastructure.daos.dataset_dao import DataSetDAO
 from service.infrastructure.daos.garment_dao import GarmentDAO
 from service.infrastructure.sqlalchemy_character_repository import (
     SQLAlchemyCharacterRepository
 )
 from service.infrastructure.sqlalchemy_client import SQLAlchemyClient
 from service.infrastructure.sqlalchemy_data_repository import SQLAlchemyDataRepository
+from service.infrastructure.sqlalchemy_dataset_repository import (
+    SQLAlchemyDataSetRepository
+)
 from service.infrastructure.sqlalchemy_garment_repository import (
     SQLAlchemyGarmentRepository
 )
@@ -189,4 +194,35 @@ class DataFactory(EntityFactory):
         updated_dto.created_date = datetime.now()
         updated_dto.name = "updated_" + entity_dto.name
         updated_dto.value = entity_dto.value + 8.6
+        return updated_dto
+
+
+class DataSetFactory(EntityFactory):
+    dto_class = DataSetDTO
+    dao_class = DataSetDAO
+    repository_class = SQLAlchemyDataSetRepository
+    repository_add_entity_method_name = "add_dataset"
+    repository_find_entities_method_name = "find_dataset"
+    repository_find_entity_by_id_method_name = "find_dataset_by_id"
+    repository_update_entity_method_name = "update_dataset"
+    repository_reset_entities_method_name = "reset"
+    repository_delete_entity_by_id_method_name = "delete_dataset_by_id"
+    persisted_data_dto = DataFactory.generate_dict
+
+    @classmethod
+    def generate_dict(cls):
+        return {
+            "id": uuid.uuid4(),
+            "created_date": datetime.now(),
+            "aggregates": {"moyenne": 17.8},
+            "dataset": [DataFactory.generate_dto()],
+        }
+
+    @classmethod
+    def generate_entity_update(cls, entity_dto: DataSetDTO) -> DataSetDTO:
+        updated_dto = DataSetDTO()
+        updated_dto.id = entity_dto.id
+        updated_dto.created_date = datetime.now()
+        updated_dto.aggregates = {"sommes": 333.33, **entity_dto.aggregates}
+        updated_dto.dataset = entity_dto.dataset
         return updated_dto
