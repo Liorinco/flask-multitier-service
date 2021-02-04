@@ -207,12 +207,12 @@ def persisted_entity(sqlalchemy_client, entity_factory):
 def application():
     from service.config import configure_application
     app = configure_application()
-    return app.app
+    return app
 
 
 @pytest.fixture
 def client(application):
-    return application.test_client()
+    return application.app.test_client()
 
 
 @pytest.fixture
@@ -239,3 +239,25 @@ def dataset_dict(data_dto):
         "aggregates": {"moyenne": 10.4},
         "dataset": [data_dto],
     }
+
+
+@pytest.fixture(autouse=True)  # autouse to clean database after all tests
+def data_repository(sqlalchemy_client):
+    from service.infrastructure.sqlalchemy_data_repository import SQLAlchemyDataRepository
+    repository = SQLAlchemyDataRepository(sqlalchemy_client=sqlalchemy_client)
+
+    yield repository
+
+    repository.reset()
+
+
+@pytest.fixture(autouse=True)  # autouse to clean database after all tests
+def dataset_aggregates_repository():
+    from service.infrastructure.cache_dataset_aggregates_repository import (
+        CacheDatasetAggregatesRepository
+    )
+    repository = CacheDatasetAggregatesRepository()
+
+    yield repository
+
+    repository.reset()
